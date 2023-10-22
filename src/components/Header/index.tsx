@@ -37,6 +37,7 @@ export default function Header() {
           </Text>
         )}
         <TextField
+          disableLabel
           value={searchContact}
           icon="/logo/search-icon.svg"
           placeholder="Search by number or name"

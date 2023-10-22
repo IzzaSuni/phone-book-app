@@ -4,11 +4,13 @@ import styled from "@emotion/styled";
 import { FlexBox, StyledSystemProps, Text } from "../styledElements";
 import Image from "next/image";
 import useDeviceType from "@/hooks/useDeviceType";
+import ShowComponent from "../ShowComponent";
 
 type InputProps = {
   small?: boolean;
   isSearchIcon?: boolean;
   icon?: string;
+  disableLabel?: boolean;
   onClickIcon?: () => void;
 } & JSX.IntrinsicElements["input"];
 
@@ -48,6 +50,7 @@ export default function TextField({
   width,
   icon,
   placeholder,
+  disableLabel,
   onClickIcon,
   ...rest
 }: TextFieldProps) {
@@ -55,7 +58,9 @@ export default function TextField({
 
   return (
     <>
-      <Text m={1}>{placeholder}</Text>
+      <ShowComponent isShow={!disableLabel}>
+        <Text m={1}>{placeholder}</Text>
+      </ShowComponent>
       <InputContainer width={width}>
         <Input placeholder={`Insert ${placeholder}`} {...rest} />
         {icon && (
