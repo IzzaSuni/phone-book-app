@@ -33,7 +33,7 @@ export default function Home() {
           </Text>
           {favorite?.map((item, index) => (
             <ContactsCard
-              buttonText="Remove Favorite"
+              buttonText="-💔"
               key={index}
               item={item}
               buttonHandler={handleRemoveFromFavorite}
@@ -48,7 +48,7 @@ export default function Home() {
           </FlexBox>
           {contactList?.contact?.map((item, index) => (
             <ContactsCard
-              buttonText="+ Favorite"
+              buttonText="+ ❤️"
               key={index}
               item={item}
               buttonHandler={handleAddToFavorite}

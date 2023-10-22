@@ -43,11 +43,16 @@ export default function ContactsCard(props: ContactsCardProps) {
         </ShowComponent>
         <ShowComponent isShow={!isLoading}>
           <Box>
-            <Text m={0}>
+            <Text m={0} fontSize={[12, 16]}>
               {first_name} {last_name}
             </Text>
             <FlexBox>
-              <Text fontWeight={200} m={0} color={"#ffffffa1"}>
+              <Text
+                fontSize={[10, 16]}
+                fontWeight={200}
+                m={0}
+                color={"#ffffffa1"}
+              >
                 {phones?.map((e) => e?.number).join(", ")}
               </Text>
             </FlexBox>
@@ -55,7 +60,7 @@ export default function ContactsCard(props: ContactsCardProps) {
         </ShowComponent>
       </FlexBox>
       <ShowComponent isShow={!isLoading}>
-        <Button fontSize={16} onClick={() => buttonHandler?.(item!)}>
+        <Button fontSize={[10, 16]} onClick={() => buttonHandler?.(item!)}>
           {buttonText}
         </Button>
       </ShowComponent>
