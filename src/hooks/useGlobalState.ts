@@ -4,6 +4,7 @@ import { KEY_STORAGE } from "@/const/keyStorage";
 import { gqlMutation, gqlQueries } from "@/network/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import { useDebounce, useWindowScroll } from "@uidotdev/usehooks";
+import { time } from "console";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage, createJSONStorage } from "jotai/utils";
 import { useEffect, useMemo } from "react";
@@ -138,22 +139,30 @@ export default function useGlobalState() {
     setFavorite(favorite.filter((v) => v.id !== item?.id));
   };
 
+  let timeout: NodeJS.Timeout | number = 0;
+
   const handleNextPage = () => {
+    clearTimeout(timeout);
     setPagination((v) => ({
       ...v,
       currentPage: v?.currentPage + 1,
     }));
-
-    window.scrollTo({ behavior: "smooth", top: document.body.scrollHeight });
+    timeout = setTimeout(() => {
+      window.scrollTo({ behavior: "smooth", top: document.body.scrollHeight });
+    }, 500);
   };
 
   const handlePrevPage = () => {
+    clearTimeout(timeout);
+
     setPagination((v) => ({
       ...v,
       currentPage: v?.currentPage - 1,
     }));
 
-    window.scrollTo({ behavior: "smooth", top: document.body.scrollHeight });
+    timeout = setTimeout(() => {
+      window.scrollTo({ behavior: "smooth", top: document.body.scrollHeight });
+    }, 500);
   };
 
   // =====End Of Func=====
