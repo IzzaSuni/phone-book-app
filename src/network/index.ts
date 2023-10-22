@@ -23,17 +23,17 @@ await persistCache({
 
 export const networkClient = new ApolloClient({
   uri: "https://wpe-hiring.tokopedia.net/graphql",
-  cache: new InMemoryCache({}),
+  cache,
 });
 
-export function useQueryClient(
+export function useQueryClient<TResponse>(
   query: DocumentNode,
   option: QueryHookOptions<any, OperationVariables> | undefined
 ) {
-  return useQuery(query, { client: networkClient, ...option });
+  return useQuery<TResponse>(query, { client: networkClient, ...option });
 }
 
-export function useMutationClient(
+export function useMutationClient<TResponse>(
   query: DocumentNode,
   option:
     | MutationHookOptions<
@@ -44,5 +44,5 @@ export function useMutationClient(
       >
     | undefined
 ) {
-  return useMutation(query, { client: networkClient, ...option });
+  return useMutation<TResponse>(query, { client: networkClient, ...option });
 }

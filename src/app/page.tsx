@@ -1,9 +1,10 @@
 "use client";
+import Loader from "@/components/Loader";
 import dynamic from "next/dynamic";
-import Loader from "./loading";
 
-const ContactList = dynamic(() => import("./list/page"), {
+const ContactList = dynamic(() => import("@/screen/list"), {
   loading: () => <Loader />,
+  ssr: false,
 });
 
 export default function Home() {

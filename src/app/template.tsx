@@ -1,7 +1,9 @@
 "use client";
-import Header from "@/components/Header";
 import { Box } from "@/components/styledElements";
+import dynamic from "next/dynamic";
 import { ReactNode } from "react";
+
+const Header = dynamic(() => import("@/components/Header"));
 
 export default function TemplateRoot({ children }: { children: ReactNode }) {
   return (
