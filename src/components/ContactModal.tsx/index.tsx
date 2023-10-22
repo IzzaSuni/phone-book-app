@@ -14,6 +14,7 @@ import useGlobalState, {
 import { useAtomValue, useSetAtom } from "jotai";
 import { closeSnackbar, enqueueSnackbar } from "notistack";
 import ShowComponent from "../ShowComponent";
+import Image from "next/image";
 
 type ContactPayload = {
   first_name: string;
@@ -146,17 +147,14 @@ export default function ContactModal() {
         <Text fontSize={[12, 18]}>
           {isEditting ? "Delete" : "Add"} Contacts
         </Text>
-        <ShowComponent isShow={!isEditting}>
-          <Button
-            width={"50%"}
-            fontSize={[14, 18]}
-            my={2}
-            py={2}
-            onClick={() => append({ number: "" })}
-          >
-            Add more phone
-          </Button>
-        </ShowComponent>
+        <Image
+          style={{ cursor: "pointer", marginLeft: "auto" }}
+          onClick={() => setModal(false)}
+          width={24}
+          height={28}
+          src={"/logo/cross-icon.png"}
+          alt="exit-modal"
+        />
       </FlexBox>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -174,6 +172,18 @@ export default function ContactModal() {
               />
             )}
           />
+          <ShowComponent isShow={!isEditting}>
+            <Button
+              margin={"auto"}
+              width={"50%"}
+              fontSize={[14, 18]}
+              my={2}
+              py={2}
+              onClick={() => append({ number: "" })}
+            >
+              Add more phone
+            </Button>
+          </ShowComponent>
           {phones?.map(({ id, number }, index) => (
             <Controller
               key={id}
@@ -187,8 +197,10 @@ export default function ContactModal() {
                   onBlur={onBlur}
                   placeholder="Phone number"
                   value={value}
-                  icon={index > 0 ? "/logo/trash-icon.png" : ""}
-                  onClickIcon={() => (index > 0 ? remove(index) : null)}
+                  icon={index > 0 || !isEditting ? "/logo/trash-icon.png" : ""}
+                  onClickIcon={() =>
+                    !isEditting || index > 0 ? remove(index) : null
+                  }
                 />
               )}
             />
