@@ -107,6 +107,7 @@ export default function useGlobalState() {
       },
     ],
   };
+
   const {
     data: contactList,
     loading: isLoadingContactList,
@@ -188,14 +189,17 @@ export default function useGlobalState() {
   }, [contactList, pagination?.currentPage]);
 
   useEffect(() => {
-    setPagination({
-      ...pagination,
-      currentPage: 0,
-      isMaxPage:
-        contactList?.contact_aggregate?.aggregate?.count! <=
-        (pagination?.currentPage + 1) * 10,
-    });
+    if (!!debouncedSearch)
+      setPagination({
+        ...pagination,
+        currentPage: 0,
+        isMaxPage:
+          contactList?.contact_aggregate?.aggregate?.count! <=
+          (pagination?.currentPage + 1) * 10,
+      });
   }, [debouncedSearch]);
+
+  console.log({ pagination });
 
   return {
     refetchContact,
