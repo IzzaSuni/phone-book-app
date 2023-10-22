@@ -4,8 +4,12 @@ import Image from "next/image";
 import { Box, FlexBox, Text } from "../styledElements";
 import TextField from "../TextField";
 import useDeviceType from "@/hooks/useDeviceType";
+import useContactData from "@/hooks/useContactData";
 
 export default function Header() {
+  const { isMobileDevice } = useDeviceType();
+  const { setSearchContact, searchContact } = useContactData();
+
   return (
     <Box
       background={"#26408B"}
@@ -19,24 +23,27 @@ export default function Header() {
         width={["100%", 512, 768]}
         margin={"auto"}
       >
-        <FlexBox
-          position={"absolute"}
-          gridGap={2}
-          alignItems={"center"}
-          right={["100%"]}
-        >
-          <Image
-            src={"/logo/phone-book-brand.svg"}
-            width={55}
-            height={55}
-            alt="brand-logo"
-            loading="lazy"
-          />
-        </FlexBox>
+        <Image
+          src={"/logo/phone-book-brand.svg"}
+          width={55}
+          height={55}
+          alt="brand-logo"
+          loading="lazy"
+        />
+        {!isMobileDevice && (
+          <Text color={"white"} fontSize={18}>
+            Phone <br />
+            Book
+          </Text>
+        )}
         <TextField
+          value={searchContact}
           isSearchIcon
           placeholder="Search by number or name"
           width={"100%"}
+          onChange={(event) => {
+            setSearchContact(event?.target?.value);
+          }}
         />
       </FlexBox>
     </Box>

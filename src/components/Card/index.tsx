@@ -15,7 +15,7 @@ export default function Card({
       margin={"auto"}
       mt={4}
       width={["90%", "80%", "768px"]}
-      padding={[4, 8, 16]}
+      padding={4}
       background={"#26408B"}
       boxShadow={"0 2px 20px 0 rgba(255,255,255,.3)"}
       color={"unset"}

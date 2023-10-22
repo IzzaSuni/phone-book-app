@@ -1,3 +1,5 @@
+"use client";
+
 import styled from "@emotion/styled";
 import { FlexBox, StyledSystemProps } from "../styledElements";
 import Image from "next/image";
@@ -25,7 +27,7 @@ const Input = styled("input")<InputProps>`
 `;
 
 const InputContainer = styled(FlexBox)`
-  background-color: #0f084b;
+  background-color: #1d044e;
   border-radius: 8px;
   align-items: center;
 

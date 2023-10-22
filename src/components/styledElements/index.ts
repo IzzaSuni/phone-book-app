@@ -70,6 +70,6 @@ export default function element<T extends keyof JSX.IntrinsicElements>(
 export const Box = element("div");
 export const FlexBox = styled(Box)({ display: "flex" });
 export const Text = styled(element("p"))`
-  color: white;
+  color: ${({ color }) => color ?? "white"};
 `;
 export const Button = element("button");
