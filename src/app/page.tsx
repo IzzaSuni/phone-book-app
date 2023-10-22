@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <FlexBox flexDirection={!!debouncedSearch ? "column-reverse" : "column"}>
       <ShowComponent isShow={favorite?.length! > 0 && !debouncedSearch}>
-        <Card>
+        <Card dataType="favorite-card">
           <Text fontSize={18} textAlign={"center"}>
             My Favorite Contact ❤️
           </Text>

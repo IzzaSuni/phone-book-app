@@ -47,6 +47,7 @@ export default function TemplateRoot({ children }: { children: ReactNode }) {
           <Box padding={2}>{children}</Box>
         </Box>
         <Button
+          datatype="button-show-modal-form-add-contact"
           position={"fixed"}
           bottom={"8px"}
           right={"16px"}

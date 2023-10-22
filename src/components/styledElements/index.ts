@@ -46,7 +46,7 @@ export default function element<T extends keyof JSX.IntrinsicElements>(
   elementTag: T
 ) {
   return styled(elementTag)<
-    StyledSystemProps & { cssStyle?: CSSObject; gap?: number }
+    StyledSystemProps & { cssStyle?: CSSObject; gap?: number; dataCy?: string }
   >`
     ${space}
     ${width}

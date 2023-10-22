@@ -21,7 +21,7 @@ const LoaderContainer = styled(FlexBox)`
 export default function Empty() {
   const { debouncedSearch } = useGlobalState();
   return (
-    <LoaderContainer>
+    <LoaderContainer datatype="screen-empty">
       <Image
         src={"/logo/phone-book-sad.svg"}
         width={300}

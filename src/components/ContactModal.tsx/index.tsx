@@ -147,6 +147,7 @@ export default function ContactModal() {
 
   return (
     <Box
+      datatype="modal-form-add-contact"
       borderRadius={4}
       width={["90%", 512]}
       m={"auto"}
@@ -181,11 +182,13 @@ export default function ContactModal() {
                 onBlur={onBlur}
                 value={value}
                 placeholder="Contact Name"
+                datatype="field-contact-name"
               />
             )}
           />
           <ShowComponent isShow={!isEditting}>
             <Button
+              datatype="button-add-more-field-contact-number"
               margin={"auto"}
               width={"50%"}
               fontSize={[14, 18]}
@@ -205,11 +208,12 @@ export default function ContactModal() {
                 <TextField
                   disabled={isEditting}
                   id={id}
+                  datatype="field-contact-number"
                   onChange={onChange}
                   onBlur={onBlur}
                   placeholder="Phone number"
                   value={value}
-                  icon={index > 0 || !isEditting ? "/logo/trash-icon.png" : ""}
+                  icon={index > 0 && !isEditting ? "/logo/trash-icon.png" : ""}
                   onClickIcon={() =>
                     !isEditting || index > 0 ? remove(index) : null
                   }
@@ -220,6 +224,7 @@ export default function ContactModal() {
           <FlexBox gridGap={3}>
             <ShowComponent isShow={isEditting}>
               <Button
+                datatype="button-delete-form-add-contact"
                 {...buttonActionStyle}
                 background={"#D71D2D"}
                 type="button"
@@ -229,7 +234,11 @@ export default function ContactModal() {
               </Button>
             </ShowComponent>
             <ShowComponent isShow={!isEditting}>
-              <Button {...buttonActionStyle} type="submit">
+              <Button
+                {...buttonActionStyle}
+                type="submit"
+                datatype="button-submit-form-add-contact"
+              >
                 Submit
               </Button>
             </ShowComponent>

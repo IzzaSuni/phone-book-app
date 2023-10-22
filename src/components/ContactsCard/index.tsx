@@ -26,6 +26,7 @@ export default function ContactsCard(props: ContactsCardProps) {
 
   return (
     <FlexBox
+      datatype="contact-card"
       position={"relative"}
       overflow={"hidden"}
       alignItems={"center"}
@@ -82,10 +83,15 @@ export default function ContactsCard(props: ContactsCardProps) {
           background={"#26408B"}
           px={2}
         >
-          <Button fontSize={[12, 18]} onClick={() => buttonHandler?.(item!)}>
+          <Button
+            datatype="button-add-remove-favorite"
+            fontSize={[12, 18]}
+            onClick={() => buttonHandler?.(item!)}
+          >
             {buttonText}
           </Button>
           <Button
+            datatype="button-edit-contact"
             p={"2px"}
             borderRadius={0}
             alignItems={"center"}

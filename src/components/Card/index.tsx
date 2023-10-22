@@ -7,7 +7,8 @@ export default function Card({
   children,
   width,
   gridGap,
-}: { children: ReactNode } & StyledSystemProps) {
+  dataType,
+}: { children: ReactNode; dataType?: string } & StyledSystemProps) {
   return (
     <FlexBox
       flexDirection={"column"}
@@ -20,6 +21,7 @@ export default function Card({
       boxShadow={"0 2px 20px 0 rgba(255,255,255,.3)"}
       color={"unset"}
       gridGap={gridGap}
+      datatype={dataType}
     >
       {children}
     </FlexBox>
