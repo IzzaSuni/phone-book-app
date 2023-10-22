@@ -31,7 +31,7 @@ export default function useGetListData() {
   const [searchContact, setSearchContact] = useState<string>("");
   const debouncedSearch = useDebounce(searchContact, 300);
 
-  const { data: contactList } = useQueryClient(gqlQueries.GET_CONTACT_LIST);
+  const { data: contactList } = useQueryClient(gqlQueries.GET_CONTACT_LIST, {});
 
   return {
     favorite,
