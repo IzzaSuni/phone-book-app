@@ -1,9 +1,14 @@
 import Image from "next/image";
 import { Box, FlexBox, Text } from "../styledElements";
 import Button from "../Button";
-import useGlobalState, { ContactList } from "@/hooks/useGlobalState";
+import useGlobalState, {
+  ContactItemAtom,
+  ContactList,
+  modalAtom,
+} from "@/hooks/useGlobalState";
 import ShowComponent from "../ShowComponent";
 import Skeleton from "react-loading-skeleton";
+import { useSetAtom } from "jotai";
 
 type ContactsCardProps = {
   buttonHandler?: (item: ContactList) => void;
@@ -13,11 +18,15 @@ type ContactsCardProps = {
 };
 
 export default function ContactsCard(props: ContactsCardProps) {
+  const setContactItem = useSetAtom(ContactItemAtom);
+  const setModal = useSetAtom(modalAtom);
+
   const { item, buttonHandler, buttonText, isLoading = false } = props;
   const { first_name, last_name, phones } = item || {};
 
   return (
     <FlexBox
+      position={"relative"}
       overflow={"hidden"}
       alignItems={"center"}
       py={2}
@@ -42,7 +51,11 @@ export default function ContactsCard(props: ContactsCardProps) {
           />
         </ShowComponent>
         <ShowComponent isShow={!isLoading}>
-          <FlexBox flexDirection={"column"} justifyContent={"center"}>
+          <FlexBox
+            flexDirection={"column"}
+            justifyContent={"center"}
+            isEllipsis
+          >
             <Text m={0} fontSize={[12, 16]}>
               {first_name}
             </Text>
@@ -60,9 +73,35 @@ export default function ContactsCard(props: ContactsCardProps) {
         </ShowComponent>
       </FlexBox>
       <ShowComponent isShow={!isLoading}>
-        <Button fontSize={[10, 16]} onClick={() => buttonHandler?.(item!)}>
-          {buttonText}
-        </Button>
+        <FlexBox
+          gridGap={3}
+          alignItems={"center"}
+          position={"absolute"}
+          right={0}
+          bottom={2}
+          background={"#26408B"}
+          px={2}
+        >
+          <Button fontSize={[12, 18]} onClick={() => buttonHandler?.(item!)}>
+            {buttonText}
+          </Button>
+          <Button
+            p={"2px"}
+            borderRadius={0}
+            alignItems={"center"}
+            onClick={() => {
+              setContactItem(item!);
+              setModal(true);
+            }}
+          >
+            <Image
+              width={26}
+              height={26}
+              src={"/logo/edit-icon.svg"}
+              alt="edit-icon"
+            />
+          </Button>
+        </FlexBox>
       </ShowComponent>
     </FlexBox>
   );

@@ -38,7 +38,10 @@ export default function TemplateRoot({ children }: { children: ReactNode }) {
 
   return (
     <ApolloProvider>
-      <SnackbarProvider anchorOrigin={{ horizontal: "right", vertical: "top" }}>
+      <SnackbarProvider
+        dense
+        anchorOrigin={{ horizontal: "right", vertical: "top" }}
+      >
         <Box>
           <Header />
           <Box padding={2}>{children}</Box>
@@ -46,7 +49,7 @@ export default function TemplateRoot({ children }: { children: ReactNode }) {
         <Button
           position={"fixed"}
           bottom={"8px"}
-          right={"8px"}
+          right={"16px"}
           fontSize={24}
           p={2}
           borderRadius={"100%"}

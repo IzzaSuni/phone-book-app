@@ -1,7 +1,7 @@
 "use client";
 
 import styled from "@emotion/styled";
-import { FlexBox, StyledSystemProps } from "../styledElements";
+import { FlexBox, StyledSystemProps, Text } from "../styledElements";
 import Image from "next/image";
 import useDeviceType from "@/hooks/useDeviceType";
 
@@ -47,25 +47,29 @@ export default function TextField({
   isSearchIcon,
   width,
   icon,
+  placeholder,
   onClickIcon,
   ...rest
 }: TextFieldProps) {
   const { isMobileDevice } = useDeviceType();
 
   return (
-    <InputContainer width={width}>
-      <Input {...rest} />
-      {icon && (
-        <Image
-          style={{ cursor: "pointer" }}
-          src={icon}
-          width={isMobileDevice ? 24 : 36}
-          height={isMobileDevice ? 24 : 36}
-          alt="search-icon"
-          loading="lazy"
-          onClick={onClickIcon}
-        />
-      )}
-    </InputContainer>
+    <>
+      <Text m={1}>{placeholder}</Text>
+      <InputContainer width={width}>
+        <Input placeholder={`Insert ${placeholder}`} {...rest} />
+        {icon && (
+          <Image
+            style={{ cursor: "pointer" }}
+            src={icon}
+            width={isMobileDevice ? 24 : 36}
+            height={isMobileDevice ? 24 : 36}
+            alt="search-icon"
+            loading="lazy"
+            onClick={onClickIcon}
+          />
+        )}
+      </InputContainer>
+    </>
   );
 }

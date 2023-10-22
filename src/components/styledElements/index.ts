@@ -1,4 +1,5 @@
 "use client";
+import { css } from "@emotion/react";
 import styled, { CSSObject } from "@emotion/styled";
 import {
   space,
@@ -67,14 +68,24 @@ export default function element<T extends keyof JSX.IntrinsicElements>(
   `;
 }
 
-export const Box = element("div");
+export const Box = styled(element("div"))<{ isEllipsis?: boolean }>`
+  ${({ isEllipsis }) => {
+    if (isEllipsis)
+      return css`
+    text-overflow: ellipsis;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  text-wrap: nowrap;
+}}`;
+  }}
+`;
 export const FlexBox = styled(Box)({ display: "flex" });
 export const Text = styled(element("p"))`
   color: ${({ color }) => color ?? "white"};
 `;
-export const StyledButton = styled(element("button"))`
+export const StyledButton = styled(element("button"))<StyledSystemProps>`
   height: fit-content;
-  background: #a6cfd5;
+  background: ${({ background }) => background ?? "#a6cfd5"};
   display: flex;
   flex-direction: column;
   align-items: center;

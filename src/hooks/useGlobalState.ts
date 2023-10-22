@@ -4,16 +4,16 @@ import { KEY_STORAGE } from "@/const/keyStorage";
 import { gqlMutation, gqlQueries } from "@/network/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import { useDebounce } from "@uidotdev/usehooks";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage, createJSONStorage } from "jotai/utils";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 
 export type ContactList = {
-  created_at: string;
+  created_at?: string;
   first_name: string;
-  id: number;
+  id?: number;
   last_name: string;
-  phones: { number: string; __typename: string }[];
+  phones: { number: string }[];
 };
 
 export type ContactListResponse = {
@@ -47,13 +47,22 @@ const paginationAtom = atomWithStorage(
   createJSONStorage(() => sessionStorage)
 );
 
+export const ContactItemAtom = atom<ContactList>({
+  first_name: "",
+  last_name: "",
+  phones: [{ number: "" }],
+});
+
 export const modalAtom = atom(false);
 
 export default function useGlobalState() {
   const [favorite, setFavorite] = useAtom(favoriteContactAtom);
   const [searchContact, setSearchContact] = useAtom(searchContactAtom);
-  const debouncedSearch = useDebounce(searchContact, 300);
   const [pagination, setPagination] = useAtom(paginationAtom);
+  const modalState = useAtomValue(modalAtom);
+  const setContactItem = useSetAtom(ContactItemAtom);
+
+  const debouncedSearch = useDebounce(searchContact, 300);
 
   const searchedPhoneNumber = debouncedSearch.split(" ").find((e) => {
     return Number(e);
@@ -62,6 +71,8 @@ export default function useGlobalState() {
   const searchedName = useMemo(() => {
     return debouncedSearch;
   }, [debouncedSearch]);
+
+  // =====QUERY=======
 
   const whereParams = {
     ...(searchedName && {
@@ -95,7 +106,6 @@ export default function useGlobalState() {
       },
     ],
   };
-
   const {
     data: contactList,
     loading: isLoadingContactList,
@@ -104,9 +114,25 @@ export default function useGlobalState() {
     variables,
   });
 
+  // ======END OF QUERY======
+
+  // ======MUTATION=========
+
   const [addContacts, { loading: isLoadingAddContact }] = useMutation(
     gqlMutation.ADD_CONTACT_WITH_PHONE
   );
+
+  const [removeContact, { loading: isLoadingDeleteContact }] = useMutation(
+    gqlMutation.DELETE_CONTACT_PHONE
+  );
+
+  const [editContact, { loading: isLoadingEditContact }] = useMutation(
+    gqlMutation.EDIT_CONTACT
+  );
+
+  // =====END OF MUTATION====
+
+  // =====Func=====
 
   const handleAddToFavorite = async (item: ContactList) => {
     setFavorite([...favorite, item]);
@@ -129,6 +155,18 @@ export default function useGlobalState() {
       currentPage: v?.currentPage - 1,
     }));
   };
+
+  // =====End Of Func=====
+
+  useEffect(() => {
+    if (!modalState) {
+      setContactItem({
+        first_name: "",
+        last_name: "",
+        phones: [{ number: "" }],
+      });
+    }
+  }, [modalState]);
 
   useEffect(() => {
     setPagination((v) => ({
@@ -166,5 +204,9 @@ export default function useGlobalState() {
     handleRemoveFromFavorite,
     addContacts,
     isLoadingAddContact,
+    removeContact,
+    isLoadingDeleteContact,
+    editContact,
+    isLoadingEditContact,
   };
 }
