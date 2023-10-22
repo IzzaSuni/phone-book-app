@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Box, FlexBox, Text } from "../styledElements";
 import Button from "../Button";
-import useContactData, { ContactList } from "@/hooks/useContactData";
+import useGlobalState, { ContactList } from "@/hooks/useGlobalState";
 import ShowComponent from "../ShowComponent";
 import Skeleton from "react-loading-skeleton";
 
@@ -21,7 +21,7 @@ export default function ContactsCard(props: ContactsCardProps) {
       overflow={"hidden"}
       alignItems={"center"}
       py={2}
-      borderBottom={"2px solid #0D0221"}
+      borderBottom={"2px solid white"}
       justifyContent={"space-between"}
     >
       <FlexBox gridGap={2}>
@@ -42,9 +42,9 @@ export default function ContactsCard(props: ContactsCardProps) {
           />
         </ShowComponent>
         <ShowComponent isShow={!isLoading}>
-          <Box>
+          <FlexBox flexDirection={"column"} justifyContent={"center"}>
             <Text m={0} fontSize={[12, 16]}>
-              {first_name} {last_name}
+              {first_name}
             </Text>
             <FlexBox>
               <Text
@@ -56,7 +56,7 @@ export default function ContactsCard(props: ContactsCardProps) {
                 {phones?.map((e) => e?.number).join(", ")}
               </Text>
             </FlexBox>
-          </Box>
+          </FlexBox>
         </ShowComponent>
       </FlexBox>
       <ShowComponent isShow={!isLoading}>

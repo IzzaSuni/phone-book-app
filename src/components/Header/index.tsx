@@ -4,11 +4,11 @@ import Image from "next/image";
 import { Box, FlexBox, Text } from "../styledElements";
 import TextField from "../TextField";
 import useDeviceType from "@/hooks/useDeviceType";
-import useContactData from "@/hooks/useContactData";
+import useGlobalState from "@/hooks/useGlobalState";
 
 export default function Header() {
   const { isMobileDevice } = useDeviceType();
-  const { setSearchContact, searchContact } = useContactData();
+  const { setSearchContact, searchContact } = useGlobalState();
 
   return (
     <Box
@@ -38,7 +38,7 @@ export default function Header() {
         )}
         <TextField
           value={searchContact}
-          isSearchIcon
+          icon="/logo/search-icon.svg"
           placeholder="Search by number or name"
           width={"100%"}
           onChange={(event) => {

@@ -5,10 +5,8 @@ import Card from "@/components/Card";
 import ContactsCard from "@/components/ContactsCard";
 import Empty from "@/components/Empty/Index";
 import ShowComponent from "@/components/ShowComponent";
-import { Box, FlexBox, Text } from "@/components/styledElements";
-import useContactData from "@/hooks/useContactData";
-import Image from "next/image";
-import Skeleton from "react-loading-skeleton";
+import { FlexBox, Text } from "@/components/styledElements";
+import useGlobalState, { modalAtom } from "@/hooks/useGlobalState";
 
 export default function Home() {
   const {
@@ -20,13 +18,14 @@ export default function Home() {
     handleAddToFavorite,
     isLoadingContactList,
     handleRemoveFromFavorite,
-  } = useContactData();
+    debouncedSearch,
+  } = useGlobalState();
 
   const isHasData = contactList?.contact?.length! > 0;
 
   return (
-    <Box>
-      <ShowComponent isShow={favorite?.length! > 0}>
+    <FlexBox flexDirection={!!debouncedSearch ? "column-reverse" : "column"}>
+      <ShowComponent isShow={favorite?.length! > 0 && !debouncedSearch}>
         <Card>
           <Text fontSize={18} textAlign={"center"}>
             My Favorite Contact ❤️
@@ -82,6 +81,6 @@ export default function Home() {
       <ShowComponent isShow={!isHasData && !isLoadingContactList}>
         <Empty />
       </ShowComponent>
-    </Box>
+    </FlexBox>
   );
 }

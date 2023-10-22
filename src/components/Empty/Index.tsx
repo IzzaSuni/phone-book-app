@@ -1,6 +1,6 @@
 "use client";
 import { FlexBox, Text } from "@/components/styledElements";
-import useContactData from "@/hooks/useContactData";
+import useGlobalState from "@/hooks/useGlobalState";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import Image from "next/image";
@@ -19,7 +19,7 @@ const LoaderContainer = styled(FlexBox)`
 `;
 
 export default function Empty() {
-  const { debouncedSearch } = useContactData();
+  const { debouncedSearch } = useGlobalState();
   return (
     <LoaderContainer>
       <Image
@@ -29,7 +29,7 @@ export default function Empty() {
         alt="logo"
         loading="lazy"
       />
-      <Text fontSize={24}>
+      <Text fontSize={24} textAlign={"center"}>
         Sorry there is no contact related to: {debouncedSearch}
       </Text>
     </LoaderContainer>

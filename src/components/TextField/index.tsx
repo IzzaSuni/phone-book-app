@@ -3,8 +3,14 @@
 import styled from "@emotion/styled";
 import { FlexBox, StyledSystemProps } from "../styledElements";
 import Image from "next/image";
+import useDeviceType from "@/hooks/useDeviceType";
 
-type InputProps = { small?: boolean; isSearchIcon?: boolean };
+type InputProps = {
+  small?: boolean;
+  isSearchIcon?: boolean;
+  icon?: string;
+  onClickIcon?: () => void;
+} & JSX.IntrinsicElements["input"];
 
 const inputSize = ({ small }: InputProps) => (small ? "12px" : "16px");
 
@@ -30,13 +36,7 @@ const InputContainer = styled(FlexBox)`
   background-color: #1d044e;
   border-radius: 8px;
   align-items: center;
-
-  img {
-    right: 12px;
-    stroke {
-      color: white;
-    }
-  }
+  padding-right: 8px;
 `;
 
 type TextFieldProps = StyledSystemProps &
@@ -46,18 +46,24 @@ type TextFieldProps = StyledSystemProps &
 export default function TextField({
   isSearchIcon,
   width,
+  icon,
+  onClickIcon,
   ...rest
 }: TextFieldProps) {
+  const { isMobileDevice } = useDeviceType();
+
   return (
     <InputContainer width={width}>
       <Input {...rest} />
-      {isSearchIcon && (
+      {icon && (
         <Image
-          src={"/logo/search-icon.svg"}
-          width={36}
-          height={36}
+          style={{ cursor: "pointer" }}
+          src={icon}
+          width={isMobileDevice ? 24 : 36}
+          height={isMobileDevice ? 24 : 36}
           alt="search-icon"
           loading="lazy"
+          onClick={onClickIcon}
         />
       )}
     </InputContainer>

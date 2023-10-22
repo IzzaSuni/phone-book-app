@@ -1,12 +1,12 @@
 "use client";
 
 import { KEY_STORAGE } from "@/const/keyStorage";
-import { gqlQueries } from "@/network/queries";
-import { useQuery } from "@apollo/client";
+import { gqlMutation, gqlQueries } from "@/network/queries";
+import { useMutation, useQuery } from "@apollo/client";
 import { useDebounce } from "@uidotdev/usehooks";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import { atomWithStorage, createJSONStorage } from "jotai/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type ContactList = {
   created_at: string;
@@ -47,7 +47,9 @@ const paginationAtom = atomWithStorage(
   createJSONStorage(() => sessionStorage)
 );
 
-export default function useContactData() {
+export const modalAtom = atom(false);
+
+export default function useGlobalState() {
   const [favorite, setFavorite] = useAtom(favoriteContactAtom);
   const [searchContact, setSearchContact] = useAtom(searchContactAtom);
   const debouncedSearch = useDebounce(searchContact, 300);
@@ -57,9 +59,9 @@ export default function useContactData() {
     return Number(e);
   });
 
-  const searchedName = debouncedSearch.split(" ").find((e) => {
-    return !Number(e);
-  });
+  const searchedName = useMemo(() => {
+    return debouncedSearch;
+  }, [debouncedSearch]);
 
   const whereParams = {
     ...(searchedName && {
@@ -92,10 +94,14 @@ export default function useContactData() {
   const {
     data: contactList,
     loading: isLoadingContactList,
-    refetch,
+    refetch: refetchContact,
   } = useQuery<ContactListResponse>(gqlQueries.GET_CONTACT_LIST, {
     variables,
   });
+
+  const [addContacts, { loading: isLoadingAddContact }] = useMutation(
+    gqlMutation.ADD_CONTACT_WITH_PHONE
+  );
 
   const handleAddToFavorite = async (item: ContactList) => {
     setFavorite([...favorite, item]);
@@ -129,7 +135,18 @@ export default function useContactData() {
     }));
   }, [contactList, pagination?.currentPage]);
 
+  useEffect(() => {
+    setPagination({
+      ...pagination,
+      currentPage: 0,
+      isMaxPage:
+        contactList?.contact_aggregate?.aggregate?.count! <=
+        (pagination?.currentPage + 1) * 10,
+    });
+  }, [debouncedSearch]);
+
   return {
+    refetchContact,
     searchContact,
     favorite,
     setFavorite,
@@ -142,5 +159,7 @@ export default function useContactData() {
     handlePrevPage,
     handleAddToFavorite,
     handleRemoveFromFavorite,
+    addContacts,
+    isLoadingAddContact,
   };
 }

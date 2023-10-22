@@ -81,4 +81,14 @@ export const StyledButton = styled(element("button"))`
   justify-content: center;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #4f6fcf;
+
+    p {
+      color: white !important;
+    }
+  }
 `;
