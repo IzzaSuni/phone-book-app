@@ -199,8 +199,6 @@ export default function useGlobalState() {
       });
   }, [debouncedSearch]);
 
-  console.log({ pagination });
-
   return {
     refetchContact,
     searchContact,

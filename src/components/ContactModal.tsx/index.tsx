@@ -157,9 +157,7 @@ export default function ContactModal() {
       overflow={"auto"}
     >
       <FlexBox justifyContent={"space-between"} alignItems={"center"}>
-        <Text fontSize={[12, 18]}>
-          {isEditting ? "Delete" : "Add"} Contacts
-        </Text>
+        <Text fontSize={[12, 18]}>{isEditting ? "Delete" : "Add"} Contact</Text>
         <Image
           style={{ cursor: "pointer", marginLeft: "auto" }}
           onClick={() => setModal(false)}

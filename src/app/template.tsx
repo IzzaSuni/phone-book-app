@@ -10,6 +10,7 @@ import Button from "@/components/Button";
 import useGlobalState, { modalAtom } from "@/hooks/useGlobalState";
 import { useAtom, useAtomValue } from "jotai";
 import { SnackbarProvider, enqueueSnackbar } from "notistack";
+import useDeviceType from "@/hooks/useDeviceType";
 
 const ApolloProvider = dynamic(() => import("@/context/ApolloProvider"), {
   ssr: false,
@@ -35,6 +36,7 @@ const customModalStyles = {
 
 export default function TemplateRoot({ children }: { children: ReactNode }) {
   const [showModal, setShoModal] = useAtom(modalAtom);
+  const { isTabletDevice, isMobileDevice } = useDeviceType();
 
   return (
     <ApolloProvider>
@@ -49,9 +51,9 @@ export default function TemplateRoot({ children }: { children: ReactNode }) {
         <Button
           datatype="button-show-modal-form-add-contact"
           position={"fixed"}
-          bottom={"8px"}
-          right={"16px"}
-          fontSize={24}
+          bottom={isTabletDevice || isMobileDevice ? "8px" : "32px"}
+          right={isTabletDevice || isMobileDevice ? "16px" : "32px"}
+          fontSize={isTabletDevice || isMobileDevice ? 24 : 26}
           p={2}
           borderRadius={"100%"}
           onClick={() => {
@@ -62,7 +64,7 @@ export default function TemplateRoot({ children }: { children: ReactNode }) {
             });
           }}
         >
-          + Contact
+          Add Contact
         </Button>
         <Modal
           style={customModalStyles}
