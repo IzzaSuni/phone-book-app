@@ -71,9 +71,9 @@ export default function Home() {
       </ShowComponent>
       <ShowComponent isShow={isLoadingContactList}>
         <Card gridGap={2}>
-          <Text fontSize={18}>All Contact List</Text>
+          <Text fontSize={18}>Loading Contact List</Text>
 
-          {[1, 2, 3, 4, 5].map((index) => (
+          {[1, 2, 3].map((index) => (
             <ContactsCard key={index} isLoading />
           ))}
         </Card>

@@ -3,7 +3,7 @@
 import { KEY_STORAGE } from "@/const/keyStorage";
 import { gqlMutation, gqlQueries } from "@/network/queries";
 import { useMutation, useQuery } from "@apollo/client";
-import { useDebounce } from "@uidotdev/usehooks";
+import { useDebounce, useWindowScroll } from "@uidotdev/usehooks";
 import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { atomWithStorage, createJSONStorage } from "jotai/utils";
 import { useEffect, useMemo } from "react";
@@ -147,6 +147,8 @@ export default function useGlobalState() {
       ...v,
       currentPage: v?.currentPage + 1,
     }));
+
+    window.scrollTo({ behavior: "smooth", top: document.body.scrollHeight });
   };
 
   const handlePrevPage = () => {
@@ -154,6 +156,8 @@ export default function useGlobalState() {
       ...v,
       currentPage: v?.currentPage - 1,
     }));
+
+    window.scrollTo({ behavior: "smooth", top: document.body.scrollHeight });
   };
 
   // =====End Of Func=====
