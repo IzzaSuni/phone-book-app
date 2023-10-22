@@ -101,7 +101,7 @@ export default function ContactModal() {
                 onChange={onChange}
                 onBlur={onBlur}
                 value={value}
-                placeholder="First Name"
+                placeholder="Contact Name"
               />
             )}
           />

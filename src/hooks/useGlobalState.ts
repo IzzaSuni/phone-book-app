@@ -89,6 +89,11 @@ export default function useGlobalState() {
     where: whereParams,
     limit: 10,
     offset: pagination?.currentPage * 10,
+    order_by: [
+      {
+        created_at: "desc",
+      },
+    ],
   };
 
   const {
