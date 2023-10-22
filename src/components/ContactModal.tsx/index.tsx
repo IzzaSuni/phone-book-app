@@ -15,6 +15,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { closeSnackbar, enqueueSnackbar } from "notistack";
 import ShowComponent from "../ShowComponent";
 import Image from "next/image";
+import useDeviceType from "@/hooks/useDeviceType";
 
 type ContactPayload = {
   first_name: string;
@@ -28,8 +29,15 @@ export default function ContactModal() {
 
   const isEditting = !!contactItem?.id;
 
-  const { addContacts, refetchContact, removeContact, editContact } =
-    useGlobalState();
+  const {
+    addContacts,
+    refetchContact,
+    removeContact,
+    favorite,
+    handleRemoveFromFavorite,
+  } = useGlobalState();
+
+  const { isMobileDevice } = useDeviceType();
 
   const { handleSubmit, control } = useForm<ContactPayload>({
     defaultValues: {
@@ -46,21 +54,12 @@ export default function ContactModal() {
 
   const onSubmit: SubmitHandler<ContactPayload> = async (val) => {
     try {
-      if (isEditting) {
-        await editContact({
-          variables: {
-            id: contactItem?.id,
-            _set: val,
-          },
-        });
-      } else {
-        await addContacts({
-          variables: { ...val, last_name: "" },
-          onCompleted(data, clientOptions) {
-            clientOptions?.client?.resetStore();
-          },
-        });
-      }
+      await addContacts({
+        variables: { ...val, last_name: "" },
+        onCompleted(data, clientOptions) {
+          clientOptions?.client?.resetStore();
+        },
+      });
 
       await refetchContact();
 
@@ -87,12 +86,21 @@ export default function ContactModal() {
   };
 
   const handleDelete = async () => {
+    const isFromFavorite = favorite?.find((v) => v.id === contactItem?.id);
+
     try {
       await removeContact({ variables: { id: contactItem?.id } });
+
       enqueueSnackbar({
-        message: "Contact Deleted",
+        message: `Contact Deleted ${
+          isFromFavorite ? " and removed from favorite" : ""
+        }`,
         variant: "success",
       });
+
+      if (isFromFavorite) {
+        handleRemoveFromFavorite(contactItem);
+      }
 
       await refetchContact();
     } catch (err) {
@@ -122,6 +130,10 @@ export default function ContactModal() {
       </>,
       {
         variant: "warning",
+        anchorOrigin: {
+          horizontal: !isMobileDevice ? "center" : "right",
+          vertical: "top",
+        },
         SnackbarProps: {
           style: { cursor: "pointer" },
           onClick: () => {

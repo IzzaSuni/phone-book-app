@@ -1,13 +1,13 @@
 "use client";
 
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { LocalStorageWrapper, persistCache } from "apollo3-cache-persist";
+import { SessionStorageWrapper, persistCache } from "apollo3-cache-persist";
 
 const cache = new InMemoryCache();
 
 await persistCache({
   cache,
-  storage: new LocalStorageWrapper(window.localStorage),
+  storage: new SessionStorageWrapper(window.sessionStorage),
 });
 
 export const networkClient = new ApolloClient({

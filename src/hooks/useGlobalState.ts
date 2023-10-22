@@ -28,7 +28,7 @@ export type ContactListResponse = {
 const favoriteContactAtom = atomWithStorage<ContactList[]>(
   KEY_STORAGE.FAVORITE_CONTACT,
   [],
-  createJSONStorage(() => sessionStorage)
+  createJSONStorage(() => localStorage)
 );
 
 const searchContactAtom = atomWithStorage<string>(
@@ -126,10 +126,6 @@ export default function useGlobalState() {
     gqlMutation.DELETE_CONTACT_PHONE
   );
 
-  const [editContact, { loading: isLoadingEditContact }] = useMutation(
-    gqlMutation.EDIT_CONTACT
-  );
-
   // =====END OF MUTATION====
 
   // =====Func=====
@@ -210,7 +206,5 @@ export default function useGlobalState() {
     isLoadingAddContact,
     removeContact,
     isLoadingDeleteContact,
-    editContact,
-    isLoadingEditContact,
   };
 }
