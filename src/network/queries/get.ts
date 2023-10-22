@@ -23,7 +23,7 @@ export const GET_CONTACT_LIST = gql`
         number
       }
     }
-    contact_aggregate(distinct_on: $distinct_on, order_by: $order_by) {
+    contact_aggregate(where: $where) {
       aggregate {
         count
       }

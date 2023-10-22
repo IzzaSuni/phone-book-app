@@ -9,13 +9,15 @@ import { atomWithStorage, createJSONStorage } from "jotai/utils";
 import { useEffect, useState } from "react";
 
 export type ContactList = {
-  contact: {
-    created_at: string;
-    first_name: string;
-    id: number;
-    last_name: string;
-    phones: { number: string; __typename: string }[];
-  }[];
+  created_at: string;
+  first_name: string;
+  id: number;
+  last_name: string;
+  phones: { number: string; __typename: string }[];
+};
+
+export type ContactListResponse = {
+  contact: ContactList[];
   contact_aggregate: {
     aggregate: {
       count: number;
@@ -23,27 +25,33 @@ export type ContactList = {
   };
 };
 
-const favoriteContactAtom = atomWithStorage<ContactList | null>(
+const favoriteContactAtom = atomWithStorage<ContactList[]>(
   KEY_STORAGE.FAVORITE_CONTACT,
-  null,
-  createJSONStorage(() => localStorage)
+  [],
+  createJSONStorage(() => sessionStorage)
 );
 
 const searchContactAtom = atomWithStorage<string>(
   KEY_STORAGE.SEARCH_CONTACT,
   "",
-  createJSONStorage(() => localStorage)
+  createJSONStorage(() => sessionStorage)
+);
+
+const paginationAtom = atomWithStorage(
+  KEY_STORAGE.PAGINATION,
+  {
+    currentPage: 0,
+    totalData: 0,
+    isMaxPage: false,
+  },
+  createJSONStorage(() => sessionStorage)
 );
 
 export default function useContactData() {
   const [favorite, setFavorite] = useAtom(favoriteContactAtom);
   const [searchContact, setSearchContact] = useAtom(searchContactAtom);
   const debouncedSearch = useDebounce(searchContact, 300);
-  const [pagination, setPagination] = useState({
-    currentPage: 0,
-    totalData: 0,
-    isMaxPage: false,
-  });
+  const [pagination, setPagination] = useAtom(paginationAtom);
 
   const searchedPhoneNumber = debouncedSearch.split(" ").find((e) => {
     return Number(e);
@@ -68,16 +76,34 @@ export default function useContactData() {
         },
       },
     }),
+    ...(favorite?.length > 0 && {
+      _and: {
+        id: { _nin: favorite?.map((v) => v.id) },
+      },
+    }),
   };
 
-  const { data: contactList, loading: isLoadingContactList } =
-    useQuery<ContactList>(gqlQueries.GET_CONTACT_LIST, {
-      variables: {
-        where: whereParams,
-        limit: 10,
-        offset: pagination?.currentPage,
-      },
-    });
+  const variables = {
+    where: whereParams,
+    limit: 10,
+    offset: pagination?.currentPage * 10,
+  };
+
+  const {
+    data: contactList,
+    loading: isLoadingContactList,
+    refetch,
+  } = useQuery<ContactListResponse>(gqlQueries.GET_CONTACT_LIST, {
+    variables,
+  });
+
+  const handleAddToFavorite = async (item: ContactList) => {
+    setFavorite([...favorite, item]);
+  };
+
+  const handleRemoveFromFavorite = async (item: ContactList) => {
+    setFavorite(favorite.filter((v) => v.id !== item?.id));
+  };
 
   const handleNextPage = () => {
     setPagination((v) => ({
@@ -97,9 +123,11 @@ export default function useContactData() {
     setPagination((v) => ({
       ...v,
       totalData: contactList?.contact_aggregate?.aggregate?.count ?? 0,
-      isMaxPage: pagination?.totalData <= (pagination?.currentPage + 1) * 10,
+      isMaxPage:
+        contactList?.contact_aggregate?.aggregate?.count! <=
+        (pagination?.currentPage + 1) * 10,
     }));
-  }, [contactList]);
+  }, [contactList, pagination?.currentPage]);
 
   return {
     searchContact,
@@ -109,5 +137,10 @@ export default function useContactData() {
     debouncedSearch,
     contactList,
     isLoadingContactList,
+    pagination,
+    handleNextPage,
+    handlePrevPage,
+    handleAddToFavorite,
+    handleRemoveFromFavorite,
   };
 }

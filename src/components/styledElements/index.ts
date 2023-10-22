@@ -45,7 +45,7 @@ export default function element<T extends keyof JSX.IntrinsicElements>(
   elementTag: T
 ) {
   return styled(elementTag)<
-    StyledSystemProps & { style?: CSSObject; gap?: number }
+    StyledSystemProps & { cssStyle?: CSSObject; gap?: number }
   >`
     ${space}
     ${width}
@@ -63,7 +63,7 @@ export default function element<T extends keyof JSX.IntrinsicElements>(
 
 
 
-  ${({ style }) => style}
+  ${({ cssStyle }) => cssStyle}
   `;
 }
 
@@ -72,4 +72,13 @@ export const FlexBox = styled(Box)({ display: "flex" });
 export const Text = styled(element("p"))`
   color: ${({ color }) => color ?? "white"};
 `;
-export const Button = element("button");
+export const StyledButton = styled(element("button"))`
+  height: fit-content;
+  background: #a6cfd5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+`;

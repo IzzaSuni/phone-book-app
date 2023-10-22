@@ -1,60 +1,85 @@
 "use client";
 
+import Button from "@/components/Button";
 import Card from "@/components/Card";
+import ContactsCard from "@/components/ContactsCard";
 import Empty from "@/components/Empty/Index";
 import ShowComponent from "@/components/ShowComponent";
 import { Box, FlexBox, Text } from "@/components/styledElements";
 import useContactData from "@/hooks/useContactData";
 import Image from "next/image";
+import Skeleton from "react-loading-skeleton";
 
 export default function Home() {
-  const { contactList, favorite } = useContactData();
+  const {
+    contactList,
+    favorite,
+    pagination,
+    handleNextPage,
+    handlePrevPage,
+    handleAddToFavorite,
+    isLoadingContactList,
+    handleRemoveFromFavorite,
+  } = useContactData();
 
   const isHasData = contactList?.contact?.length! > 0;
 
   return (
     <Box>
-      <ShowComponent isShow={favorite?.contact?.length! > 0}>
+      <ShowComponent isShow={favorite?.length! > 0}>
         <Card>
-          <Text>Favorite Contact ❤️</Text>
+          <Text fontSize={18} textAlign={"center"}>
+            My Favorite Contact ❤️
+          </Text>
+          {favorite?.map((item, index) => (
+            <ContactsCard
+              buttonText="Remove Favorite"
+              key={index}
+              item={item}
+              buttonHandler={handleRemoveFromFavorite}
+            />
+          ))}
         </Card>
       </ShowComponent>
       <ShowComponent isShow={isHasData}>
         <Card gridGap={2}>
-          <Text fontSize={18}>All Contact List</Text>
-          {contactList?.contact?.map(
-            ({ first_name, phones, last_name }, index) => {
-              return (
-                <FlexBox
-                  key={index}
-                  alignItems={"center"}
-                  gridGap={2}
-                  py={2}
-                  borderBottom={"2px solid #0D0221"}
-                >
-                  <Image
-                    width={42}
-                    height={42}
-                    alt="user-icon-logo"
-                    src={"/logo/user-icon.png"}
-                  />
-                  <Box>
-                    <Text m={0}>
-                      {first_name} {last_name}
-                    </Text>
-                    <FlexBox>
-                      <Text fontWeight={200} m={0} color={"#ffffffa1"}>
-                        {phones?.map((e) => e?.number).join(", ")}
-                      </Text>
-                    </FlexBox>
-                  </Box>
-                </FlexBox>
-              );
-            }
-          )}
+          <FlexBox alignItems={"center"} justifyContent={"space-between"}>
+            <Text fontSize={18}>All Contact List</Text>
+          </FlexBox>
+          {contactList?.contact?.map((item, index) => (
+            <ContactsCard
+              buttonText="+ Favorite"
+              key={index}
+              item={item}
+              buttonHandler={handleAddToFavorite}
+            />
+          ))}
+
+          <FlexBox justifyContent={"center"} alignItems={"center"} gridGap={3}>
+            <ShowComponent isShow={pagination?.currentPage > 0}>
+              <Button fontSize={18} p={"4px 12px"} onClick={handlePrevPage}>
+                Previous
+              </Button>
+            </ShowComponent>
+            <Text fontSize={24}>{pagination?.currentPage + 1}</Text>
+            <ShowComponent isShow={!pagination?.isMaxPage}>
+              <Button fontSize={18} p={"4px 12px"} onClick={handleNextPage}>
+                Next
+              </Button>
+            </ShowComponent>
+          </FlexBox>
         </Card>
       </ShowComponent>
-      <ShowComponent isShow={!isHasData}>
+      <ShowComponent isShow={isLoadingContactList}>
+        <Card gridGap={2}>
+          <Text fontSize={18}>All Contact List</Text>
+
+          {[1, 2, 3, 4, 5].map((index) => (
+            <ContactsCard key={index} isLoading />
+          ))}
+        </Card>
+      </ShowComponent>
+      <ShowComponent isShow={!isHasData && !isLoadingContactList}>
         <Empty />
       </ShowComponent>
     </Box>
