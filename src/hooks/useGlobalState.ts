@@ -69,9 +69,9 @@ export default function useGlobalState() {
     return Number(e);
   });
 
-  const searchedName = useMemo(() => {
-    return debouncedSearch;
-  }, [debouncedSearch]);
+  const searchedName = debouncedSearch.split(" ").find((e) => {
+    return !Number(e);
+  });
 
   // =====QUERY=======
 
