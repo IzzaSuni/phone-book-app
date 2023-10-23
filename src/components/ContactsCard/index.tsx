@@ -52,7 +52,11 @@ export default function ContactsCard(props: ContactsCardProps) {
           />
         </ShowComponent>
         <ShowComponent isShow={!isLoading}>
-          <FlexBox flexDirection={"column"} justifyContent={"center"}>
+          <FlexBox
+            flexDirection={"column"}
+            justifyContent={"center"}
+            isEllipsis
+          >
             <Text m={0} fontSize={[12, 16]}>
               {first_name}
             </Text>

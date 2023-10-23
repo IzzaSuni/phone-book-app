@@ -72,6 +72,7 @@ export const Box = styled(element("div"))<{ isEllipsis?: boolean }>`
   ${({ isEllipsis }) => {
     if (isEllipsis)
       return css`
+    display: flex;
     text-overflow: ellipsis;
   overflow: hidden;
   flex-wrap: nowrap;
